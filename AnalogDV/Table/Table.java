@@ -26,8 +26,9 @@ public abstract class Table {
 
     /**
      * Second constructor, no params
+     * @throws Exception if something happens while formatting table
      */
-    public Table() {
+    public Table() throws Exception {
 
         this.createEmptyTable();
         this.tableElements = new ArrayList<String>(); // needed because call above makes another list filled with white-spaces
@@ -44,8 +45,8 @@ public abstract class Table {
     private void formatTable(ArrayList<String> elements, int columns) throws Exception {
 
         this.maxCellSize = this.getMaxCellSize(elements);
-        Arraylist<String> formattedElements = this.formatCells(elements, maxCellSize);
-        this.numberOfColumns = this.testColumnValue(columns);
+        ArrayList<String> formattedElements = this.formatCells(elements, maxCellSize);
+        this.testColumnValue(columns);
         this.table = this.buildTable(formattedElements, this.numberOfColumns, this.maxCellSize);
         this.tableElements = elements;
     }
@@ -56,12 +57,12 @@ public abstract class Table {
      * @param colum maximum number of columns in each row of the table
      * @throws Exception if columns < 1
      */
-    private void testColumValue(int columns) throws Exception {
+    private void testColumnValue(int columns) throws Exception {
 
         if (columns < 1) {
 
             String errorMessage = "number of columns on each row should be greater than 0";
-            throw
+            throw new Exception(errorMessage);
         }
 
         this.numberOfColumns = columns;
@@ -132,7 +133,7 @@ public abstract class Table {
      * @param cellSize maximum length of a cell
      * @return string representation of table, as a stringbuilder
      */
-    private StringBuilder createTable(ArrayList<String> elements, int columns, int cellSize) {
+    private StringBuilder buildTable(ArrayList<String> elements, int columns, int cellSize) {
 
         StringBuilder table = new StringBuilder();
         StringBuilder row = new StringBuilder();
@@ -164,14 +165,35 @@ public abstract class Table {
         return table;
     }
 
+    /**
+     * Makes bars to seperate each row of the table
+     *
+     * @param cellSize maximum length of 1 cell
+     * @param columns max number of columns on each row
+     * @return string representation of a bar
+     */
+    public String getBar(int cellSize, int columns) {
+
+        StringBuilder b = new StringBuilder();
+        int limit = cellSize * columns;
+
+        for (int i = 0; i < limit; i++) {
+
+            b.append("-");
+        }
+
+        return b.toString();
+    }
+
     /* METHODS - interface */
 
     /**
      * Lets user swap entire content of table for new one
      *
      * @param elements list of new strings
+     * @throws Exception if something happens while formatting table
      */
-    public void setTable(ArrayList<String> elements) {
+    public void setTable(ArrayList<String> elements) throws Exception {
 
         this.formatTable(elements, this.numberOfColumns);
     }
@@ -191,8 +213,9 @@ public abstract class Table {
      * Lets user add an element to table
      *
      * @param element new element to be insterted to table
+     * @throws Exception if something happens while formatting table
      */
-    public void add(String element) {
+    public void add(String element) throws Exception {
 
         this.tableElements.add(element);
         this.formatTable(this.tableElements, this.numberOfColumns);
@@ -200,8 +223,9 @@ public abstract class Table {
 
     /**
      * Clears the entire table, and its contents are gone forever
+     * @throws Exception if something happens while formatting table
      */
-    public void clear() {
+    public void clear() throws Exception {
 
         this.createEmptyTable();
         this.tableElements = new ArrayList<String>(); // needed because call above makes another list filled with white-spaces
@@ -223,8 +247,9 @@ public abstract class Table {
      * Extracts contents of another table and adds it to this table, iff the tables don't have same content
      *
      * @param otherTable another instance of a class that extendsTable
+     * @throws Exception if something happens while formatting table
      */
-    public void merge(Table otherTable) {
+    public void merge(Table otherTable) throws Exception {
 
         if (!this.equals(otherTable)) {
 
@@ -238,8 +263,9 @@ public abstract class Table {
      *
      * @param column the column where the element is
      * @param row the row where the element is
+     * @throws Exception if something happens while formatting table
      */
-     public void remove(int column, int row) {
+     public void remove(int column, int row) throws Exception {
 
         int cellNumber = row * column - 1;
         this.tableElements.remove(cellNumber);
