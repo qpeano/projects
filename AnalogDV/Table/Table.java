@@ -3,29 +3,44 @@ import java.util.ArrayList;
 
 public abstract class Table {
 
-    private StringBuilder table; // string representation of the table, with its elements
-    private ArrayList<String> tableElements; // all the individual (filled) cells of the table
-    private int numberOfColumns; // maximum number of columns on each row
-    private int maxCellSize;
+    /* FIELDS */
 
-    /* CONSTRUCTORS */
+    private StringBuilder table; // string representation of table, with elements inserted
+    private ArrayList<String> tableElements; // list of elements that occupy cells of table
+    private int numberOfColumns; // sets maximum number of columns on each row
+    private int maxCellSize; // maximum numbers characters in each cell
 
-    // ctor 1, takes a list of strings, and number of columns in table
+    /* METHODS - constructors */
+
+    /**
+     * First constructor
+     *
+     * @param elements ready-made list of elements
+     * @param columns maximum number of columns on each row, should be greater than 0
+     * @throws Exception if columns < 1
+     */
     public Table(ArrayList<String> elements, int columns) throws Exception {
 
         this.formatTable(elements, columns);
     }
 
-    // ctor 2, no parameters
+    /**
+     * Second constructor, no params
+     */
     public Table() {
 
         this.createEmptyTable();
-        this.tableElements = new ArrayList<String>();
+        this.tableElements = new ArrayList<String>(); // needed because call above makes another list filled with white-spaces
     }
 
-    /* INTERNAL */
+    /* METHODS - internal */
 
-    // method gets everything ready for creation of table
+    /**
+     * Gets everything ready for creation of table
+     * @param elements ready-made list of elements
+     * @param columns maximum number of columns on each row, should be greater than 0
+     * @throws Exception if columns < 1
+     */
     private void formatTable(ArrayList<String> elements, int columns) throws Exception {
 
         this.maxCellSize = this.getMaxCellSize(elements);
@@ -35,7 +50,12 @@ public abstract class Table {
         this.tableElements = elements;
     }
 
-    // tests if argument for the column field is viable (greater than 0) or not
+    /**
+     * Tests if argument for the columns field is viable (greater than 0) or not
+     *
+     * @param colum maximum number of columns in each row of the table
+     * @throws Exception if columns < 1
+     */
     private void testColumValue(int columns) throws Exception {
 
         if (columns < 1) {
@@ -47,7 +67,9 @@ public abstract class Table {
         this.numberOfColumns = columns;
     }
 
-    // creates an empty table for aesthetics, if user instantiates object with ctor 2
+    /**
+     * Creates an empty table string for aesthetics
+     */
     public void createEmptyTable() throws Exception {
 
         ArrayList<String> elementsDummy = new ArrayList<String>();
@@ -59,7 +81,12 @@ public abstract class Table {
         this.formatTable(elementsDummy, columnsDummy);
     }
 
-    // method checks length of each string in list, and returns highest number
+    /**
+     * Checks the length of each element of a strings list
+     *
+     * @param elements list of strings
+     * @return maximum length of a cell
+     */
     private int getMaxCellSize(ArrayList<String> elements) {
 
         int cellSize = 0;
@@ -74,7 +101,13 @@ public abstract class Table {
         return cellSize + 4; // for "[ " and " ]" at beginning and end
     }
 
-    // method formats each string of the list in a specific way to fit into the table
+    /**
+     * Formats each element of the string list for fit into the table properly
+     *
+     * @param elements list of string elements
+     * @param cellSize max length of a cell in table
+     * @return formatted list of string elements
+     */
     private ArrayList<String> formatCells(ArrayList<String> elements, int cellSize) {
 
         ArrayList<String> formattedElements = new ArrayList<String>();
@@ -91,7 +124,14 @@ public abstract class Table {
         return formattedElements;
     }
 
-    // method builds and returns stringbuilder representation of the table, with elements
+    /**
+     * Builds the string representation of the table, with all elements insterted
+     *
+     * @param elements formatted list of string elements
+     * @param columns maximum number of columns in each row
+     * @param cellSize maximum length of a cell
+     * @return string representation of table, as a stringbuilder
+     */
     private StringBuilder createTable(ArrayList<String> elements, int columns, int cellSize) {
 
         StringBuilder table = new StringBuilder();
@@ -124,43 +164,85 @@ public abstract class Table {
         return table;
     }
 
-    /* INTERFACE */
+    /* METHODS - interface */
 
-    // method lets user swap entire content of table for new one
+    /**
+     * Lets user swap entire content of table for new one
+     *
+     * @param elements list of new strings
+     */
     public void setTable(ArrayList<String> elements) {
 
-        this.formatTable(elements, this.numberOfRows);
+        this.formatTable(elements, this.numberOfColumns);
     }
 
-    // method lets user change number of columns on each row
+    /**
+     * Lets user change number of columns on each row
+     *
+     * @param columns new maximum number of columns in a row
+     * @throws Exception if columns < 1
+     */
     public void setColumns(int columns) throws Exception {
 
         this.formatTable(this.tableElements, columns);
     }
 
-    // method lets user add elements to table
+    /**
+     * Lets user add an element to table
+     *
+     * @param element new element to be insterted to table
+     */
     public void add(String element) {
 
         this.tableElements.add(element);
         this.formatTable(this.tableElements, this.numberOfColumns);
     }
 
-    // method lets user clear table
+    /**
+     * Clears the entire table, and its contents are gone forever
+     */
     public void clear() {
 
         this.createEmptyTable();
-        this.tableElements = new ArrayList<String>();
+        this.tableElements = new ArrayList<String>(); // needed because call above makes another list filled with white-spaces
     }
 
-    // method lets user merge two table together into one
+    /**
+     * Checks if the contents of 2 tables are the same or not
+     *
+     * @param otherTable another instance of a class that extends Table
+     * @return true if contents are the same, false otherwise
+     */
+     public boolean equals(Table otherTable) {
+
+        boolean result = this.tableElements.equals(otherTable.tableElements);
+        return result;
+     }
+
+    /**
+     * Extracts contents of another table and adds it to this table, iff the tables don't have same content
+     *
+     * @param otherTable another instance of a class that extendsTable
+     */
     public void merge(Table otherTable) {
 
-        this.tableElements.addAll(otherTable.tableElements);
+        if (!this.equals(otherTable)) {
+
+            this.tableElements.addAll(otherTable.tableElements);
+            this.formatTable(this.tableElements, this.numberOfColumns);
+        }
+    }
+
+    /**
+     * Removes an element with specified index from the table
+     *
+     * @param column the column where the element is
+     * @param row the row where the element is
+     */
+     public void remove(int column, int row) {
+
+        int cellNumber = row * column - 1;
+        this.tableElements.remove(cellNumber);
         this.formatTable(this.tableElements, this.numberOfColumns);
-    }
-
-    public void remove(int cellNumber) throws Exception {
-
-        
-    }
+     }
 }
