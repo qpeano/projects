@@ -14,7 +14,7 @@ public class VariableLengthTable extends Table {
     /* METHODS - constructors */
 
     /**
-     * First constructor
+     * First constructor, use if newest elements should be on top of older elements
      *
      * @param elements ready-made list of elements
      * @param columns maximum number of columns on each row, should be greater than 0
@@ -27,6 +27,7 @@ public class VariableLengthTable extends Table {
         this.file = new File(path);
         this.file.createNewFile(); // if file does not exist prior to execution
         this.hasContent(this.file);
+        this.printTable(this.file); // prints out old elements and new elements, newest first
     }
 
     /**
@@ -49,9 +50,10 @@ public class VariableLengthTable extends Table {
      * Reads file and extracts all elements, if there are any and if it is properly formatted
      *
      * @param f a text-file which represents a table
+     * @throws Exception if something happens while formatting table
      * @throws IOException if something happens while reading from file or if file is not formatted properly
      */
-    private void hasContent(File f) throws IOException {
+    private void hasContent(File f) throws IOException, Exception {
 
         String line;
         boolean result = false;
@@ -74,9 +76,10 @@ public class VariableLengthTable extends Table {
      * Extracts all the elements of the table
      *
      * @param f a text-file which represents a table
+     * @throws Exception if something happens while formatting table
      * @throws IOException if something happens while reading from file or if file is not formatted properly
      */
-    private void extract(File f) throws IOException {
+    private void extract(File f) throws IOException, Exception {
 
         String line;
         BufferedReader br = new BufferedReader(new FileReader(f));
@@ -84,7 +87,7 @@ public class VariableLengthTable extends Table {
         Matcher formatMatcher;
         int lineCounter = 0;
 
-        while ((line == br.readLine()) != null) {
+        while ((line = br.readLine()) != null) {
 
             lineCounter++;
             formatMatcher = lineFormat.matcher(line);
@@ -135,6 +138,7 @@ public class VariableLengthTable extends Table {
 
     /**
      * Splits string read from file into list of elements to be added to table
+     *
      * @param line line of text
      * @return list of elements extracted from file
      */
@@ -142,15 +146,17 @@ public class VariableLengthTable extends Table {
 
         ArrayList<String> elementList = new ArrayList<String>();
         String line2 = line.substring(2, line.length() - 1).replaceAll("\\s+", ""); // removes 1st and last bracket and whitespaces
-        String[] elementArray = line2.split("\\]\\["); // removes all brackets left
+        String[] elementArray = line2.split("\\]\\["); // removes all brackets that are left
         Collections.addAll(elementList, elementArray);
 
         return elementList;
     }
 
     /**
-     * prints table out to file
+     * Prints table out to file
+     *
      * @param f text-file that table is going to get printed to
+     * @throws IOException if something happens while reading from file
      */
     private void printTable(File f) throws IOException {
 
@@ -162,4 +168,114 @@ public class VariableLengthTable extends Table {
 
     /* METHODS - interface */
 
+    /**
+     * Lets user add an element to table
+     *
+     * @param element new element to be insterted to table
+     * @throws Exception if something happens while formatting table
+     * @throws IOException if something happens while writing to file
+     */
+    public void add(String element) throws IOException, Exception {
+
+        super.add(element);
+        this.printTable(this.file);
+    }
+
+    /**
+     * Lets user add a list of elements to table
+     *
+     * @param elements new elements to be insterted to table
+     * @throws Exception if something happens while formatting table
+     * @throws IOException if something happens while writing to file
+     */
+    public void add(ArrayList<String> elements) throws IOException, Exception {
+
+        super.add(elements);
+        this.printTable(this.file);
+    }
+
+    /**
+     * Removes an element with specified index from the table
+     *
+     * @param column the column where the element is
+     * @param row the row where the element is
+     * @throws Exception if something happens while formatting table
+     * @throws IOException if something happens while writing to file
+     */
+    public void remove(int column, int row) throws IOException, Exception {
+
+        super.remove(column, row);
+        this.printTable(this.file);
+     }
+
+    /**
+     * Lets user change number of columns on each row
+     *
+     * @param columns new maximum number of columns in a row
+     * @throws Exception if columns < 1
+     * @throws IOException if something happens while writing to file
+     */
+    public void setColumns(int columns) throws IOException, Exception {
+
+        super.setColumns(columns);
+        this.printTable(this.file);
+    }
+
+    /**
+     * Checks if a table has the exact same content as this
+     *
+     * @param otherTable another instance of a class that extends Table
+     * @return true if contents are the same, false otherwise
+     */
+    public boolean equals(Table otherTable) {
+
+        return super.equals(otherTable);
+     }
+
+    /**
+     * Extracts contents of another table and adds it to this table, iff the tables don't have same content
+     *
+     * @param otherTable another instance of a class that extendsTable
+     * @throws Exception if something happens while formatting table
+     * @throws IOException if something happens while writing to file
+     */
+    public void merge(Table otherTable) throws IOException, Exception {
+
+        super.merge(otherTable);
+        this.printTable(this.file);
+    }
+
+    /**
+     * Clears the entire table, and its contents are gone forever
+     *
+     * @throws Exception if something happens while formatting table
+     * @throws IOException if something happens while writing to file
+     */
+    public void clear() throws IOException, Exception {
+
+        super.clear();
+        this.printTable(this.file);
+    }
+
+    /* METHODS - other */
+
+    /**
+     * Fetches size of the table, i.e number of elements the table contains
+     *
+     * @return number of elements
+     */
+    public int size() {
+
+        return super.size();
+    }
+
+    /**
+     * Fetches the string representation of the table
+     *
+     * @return string rep. of table
+     */
+    public String toString() {
+
+        return super.getTable();
+    }
 }
