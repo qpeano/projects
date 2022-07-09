@@ -197,14 +197,13 @@ public class VariableLengthTable extends Table {
     /**
      * Removes an element with specified index from the table
      *
-     * @param column the column where the element is
-     * @param row the row where the element is
+     * @param cellNumber is where in the table the element is
      * @throws Exception if something happens while formatting table
      * @throws IOException if something happens while writing to file
      */
-    public void remove(int column, int row) throws IOException, Exception {
+    public void remove(int cellNumber) throws IOException, Exception {
 
-        super.remove(column, row);
+        super.remove(cellNumber);
         this.printTable(this.file);
      }
 
