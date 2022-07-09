@@ -71,7 +71,7 @@ public abstract class Table {
     /**
      * Creates an empty table string for aesthetics
      */
-    public void createEmptyTable() throws Exception {
+    private void createEmptyTable() throws Exception {
 
         ArrayList<String> elementsDummy = new ArrayList<String>();
         int columnsDummy = 4;
@@ -172,7 +172,7 @@ public abstract class Table {
      * @param columns max number of columns on each row
      * @return string representation of a bar
      */
-    public String getBar(int cellSize, int columns) {
+    private String getBar(int cellSize, int columns) {
 
         StringBuilder b = new StringBuilder();
         int limit = cellSize * columns;
@@ -237,7 +237,7 @@ public abstract class Table {
      * @param otherTable another instance of a class that extends Table
      * @return true if contents are the same, false otherwise
      */
-     public boolean equals(Table otherTable) {
+    public boolean equals(Table otherTable) {
 
         boolean result = this.tableElements.equals(otherTable.tableElements);
         return result;
@@ -258,6 +258,7 @@ public abstract class Table {
         }
     }
 
+    // !! TEST THIS METHOD !! //
     /**
      * Removes an element with specified index from the table
      *
@@ -265,10 +266,39 @@ public abstract class Table {
      * @param row the row where the element is
      * @throws Exception if something happens while formatting table
      */
-     public void remove(int column, int row) throws Exception {
+    public void remove(int column, int row) throws Exception {
 
         int cellNumber = row * column - 1;
         this.tableElements.remove(cellNumber);
         this.formatTable(this.tableElements, this.numberOfColumns);
      }
+
+     /**
+      * Fetches the string representation of the table
+      * @return string representation of table, with elements if table is not empty
+      */
+    public String getTable() {
+
+        return this.table.toString();
+    }
+
+    /**
+     * Fetches size of the table, i.e number of elements the table contains
+     * @return number of elements
+     */
+    public int size() {
+
+        return this.tableElements.size();
+    }
+
+    /**
+     * Used in classes which inherit from this one, checks if a line (from a file) is equal to the bar
+     * @param line line in the file
+     * @return true if line is the bar, false otherwise
+     */
+    public boolean isBar(String line) {
+
+        String bar = this.getBar(this.maxCellSize, this.numberOfColumns);
+        return bar.equals(line); 
+    }
 }
