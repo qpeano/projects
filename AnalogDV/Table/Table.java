@@ -188,17 +188,6 @@ public abstract class Table {
     /* METHODS - interface */
 
     /**
-     * Lets user swap entire content of table for new one
-     *
-     * @param elements list of new strings
-     * @throws Exception if something happens while formatting table
-     */
-    public void setTable(ArrayList<String> elements) throws Exception {
-
-        this.formatTable(elements, this.numberOfColumns);
-    }
-
-    /**
      * Lets user change number of columns on each row
      *
      * @param columns new maximum number of columns in a row
