@@ -229,10 +229,7 @@ public abstract class Table {
      */
     public void add(ArrayList<String> elements) throws Exception {
 
-        for (String element : elements) {
-
-            this.tableElements.add(element);
-        }
+        this.tableElements.addAll(elements);
         this.formatTable(this.tableElements, this.numberOfColumns);
     }
 
