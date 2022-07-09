@@ -255,17 +255,14 @@ public abstract class Table {
         this.add(otherTable.tableElements);
     }
 
-    // !! TEST THIS METHOD !! //
     /**
      * Removes an element with specified index from the table
      *
-     * @param column the column where the element is
-     * @param row the row where the element is
+     * @param cellNumber is where in the table the element is
      * @throws Exception if something happens while formatting table
      */
-    public void remove(int column, int row) throws Exception {
+    public void remove(int cellNumber) throws Exception {
 
-        int cellNumber = row * column - 1;
         this.tableElements.remove(cellNumber);
         this.formatTable(this.tableElements, this.numberOfColumns);
      }
