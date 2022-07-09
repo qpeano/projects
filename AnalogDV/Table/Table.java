@@ -222,6 +222,21 @@ public abstract class Table {
     }
 
     /**
+     * Lets user add a list of elements to table
+     *
+     * @param elements new elements to be insterted to table
+     * @throws Exception if something happens while formatting table
+     */
+    public void add(ArrayList<String> elements) throws Exception {
+
+        for (String element : elements) {
+
+            this.tableElements.add(element);
+        }
+        this.formatTable(this.tableElements, this.numberOfColumns);
+    }
+
+    /**
      * Clears the entire table, and its contents are gone forever
      * @throws Exception if something happens while formatting table
      */
@@ -251,11 +266,7 @@ public abstract class Table {
      */
     public void merge(Table otherTable) throws Exception {
 
-        if (!this.equals(otherTable)) {
-
-            this.tableElements.addAll(otherTable.tableElements);
-            this.formatTable(this.tableElements, this.numberOfColumns);
-        }
+        this.add(otherTable.tableElements);
     }
 
     // !! TEST THIS METHOD !! //
@@ -299,6 +310,6 @@ public abstract class Table {
     public boolean isBar(String line) {
 
         String bar = this.getBar(this.maxCellSize, this.numberOfColumns);
-        return bar.equals(line); 
+        return bar.equals(line);
     }
 }
