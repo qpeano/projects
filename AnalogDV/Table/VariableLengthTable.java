@@ -31,17 +31,20 @@ public class VariableLengthTable extends Table {
     }
 
     /**
-     * Second constructor, no params
+     * Second constructor
      *
+     * @param path where the file is
+     * @param columns max number of columns in a row
      * @throws IOException if something happens while reading from file or if file is not formatted properly
      * @throws Exception if something happens while formatting table
      */
-    public VariableLengthTable(String path) throws Exception, Exception {
+    public VariableLengthTable(String path, int columns) throws Exception, Exception {
 
-        super();
+        super(columns);
         this.file = new File(path);
         this.file.createNewFile(); // if file does not exist prior to execution
         this.hasContent(this.file);
+        this.printTable(this.file); // prints out empty table, or table with the elements in the file
     }
 
     /* METHODS - internal */
@@ -84,17 +87,20 @@ public class VariableLengthTable extends Table {
         String line;
         BufferedReader br = new BufferedReader(new FileReader(f));
         Pattern lineFormat = Pattern.compile("(\\[\\s\\w+\\s+\\])+");
-        Matcher formatMatcher;
+        Pattern barFormat = Pattern.compile("\\-+");
+        Matcher lineMatcher;
+        Matcher barMatcher;
         int lineCounter = 0;
 
         while ((line = br.readLine()) != null) {
 
             lineCounter++;
-            formatMatcher = lineFormat.matcher(line);
 
             if (lineCounter % 2 != 0) {
 
-                if (!super.isBar(line)) {
+                barMatcher = barFormat.matcher(line);
+
+                if (!barMatcher.matches()) {
 
                    String errorMessage = this.generateErrorMessage("LINE SHOULD BE A DIVIDING BAR", lineCounter, this.file.toString());
                    throw new IOException(errorMessage);
@@ -102,7 +108,9 @@ public class VariableLengthTable extends Table {
             }
             else {
 
-                if (formatMatcher.matches()) {
+                lineMatcher = lineFormat.matcher(line);
+
+                if (lineMatcher.matches()) {
 
                     ArrayList<String> elements = this.splitByElement(line);
                     super.add(elements);
@@ -129,9 +137,9 @@ public class VariableLengthTable extends Table {
     private String generateErrorMessage(String message, int line, String file) {
 
         StringBuilder errorMessage = new StringBuilder();
-        errorMessage.append("Line: " + line + "\n");
-        errorMessage.append("File: " + file + "\n");
-        errorMessage.append("Message: " + message);
+        errorMessage.append("\nLine: " + line);
+        errorMessage.append("\nFile: " + file);
+        errorMessage.append("\nMessage: " + message);
 
         return errorMessage.toString();
     }
