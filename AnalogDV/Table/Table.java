@@ -25,12 +25,15 @@ public abstract class Table {
     }
 
     /**
+     *
      * Second constructor, no params
+     *
+     * @param columns max number of columns on each row
      * @throws Exception if something happens while formatting table
      */
-    public Table() throws Exception {
+    public Table(int columns) throws Exception {
 
-        this.createEmptyTable();
+        this.createEmptyTable(columns);
         this.tableElements = new ArrayList<String>(); // needed because call above makes another list filled with white-spaces
     }
 
@@ -61,7 +64,7 @@ public abstract class Table {
 
         if (columns < 1) {
 
-            String errorMessage = "number of columns on each row should be greater than 0";
+            String errorMessage = "NUMBER OF COLUMNS ON EACH ROW SHOULD BE GREATER THAN 0";
             throw new Exception(errorMessage);
         }
 
@@ -71,15 +74,14 @@ public abstract class Table {
     /**
      * Creates an empty table string for aesthetics
      */
-    private void createEmptyTable() throws Exception {
+    private void createEmptyTable(int columns) throws Exception {
 
         ArrayList<String> elementsDummy = new ArrayList<String>();
-        int columnsDummy = 4;
         for (int i = 0; i < 8; i++) {
 
             elementsDummy.add("");
         }
-        this.formatTable(elementsDummy, columnsDummy);
+        this.formatTable(elementsDummy, columns);
     }
 
     /**
@@ -112,9 +114,9 @@ public abstract class Table {
     private ArrayList<String> formatCells(ArrayList<String> elements, int cellSize) {
 
         ArrayList<String> formattedElements = new ArrayList<String>();
-        for (int i = 0; i < formattedElements.size(); i++) {
+        for (int i = 0; i < elements.size(); i++) {
 
-            String element = elements.get(i) + "[ ";
+            String element = "[ " + elements.get(i);
             while (element.length() < cellSize - 1) {
 
                 element = element + " ";
@@ -228,7 +230,7 @@ public abstract class Table {
      */
     public void clear() throws Exception {
 
-        this.createEmptyTable();
+        this.createEmptyTable(this.numberOfColumns);
         this.tableElements = new ArrayList<String>(); // needed because call above makes another list filled with white-spaces
     }
 
@@ -283,16 +285,5 @@ public abstract class Table {
     public int size() {
 
         return this.tableElements.size();
-    }
-
-    /**
-     * Used in classes which inherit from this one, checks if a line (from a file) is equal to the bar
-     * @param line line in the file
-     * @return true if line is the bar, false otherwise
-     */
-    public boolean isBar(String line) {
-
-        String bar = this.getBar(this.maxCellSize, this.numberOfColumns);
-        return bar.equals(line);
     }
 }
