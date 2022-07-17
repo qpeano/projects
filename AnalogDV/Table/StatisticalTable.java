@@ -15,7 +15,7 @@ public class StatisticalTable extends Table {
     /* METHODS - constructors */
 
     /**
-     * First constructor
+     * Constructor
      *
      * @param path where the file is
      * @param columns max number of columns in a row
@@ -54,7 +54,7 @@ public class StatisticalTable extends Table {
      * @param elements new list of string elements
      * @throws Exception if any element can't be converted to double
      */
-    private void addDataPoint(ArrayList<Double> dataList, ArrayList<String> elements) throws Exception {
+    private void addDataPoints(ArrayList<Double> dataList, ArrayList<String> elements) throws Exception {
 
         for (String element : elements) {
 
@@ -67,9 +67,9 @@ public class StatisticalTable extends Table {
      *
      * @param dataList list of numerical objects (doubles)
      * @param elements new list of string elements
-     * @throws Exception if any element can't be converted to double
+     * @throws IOException if any element read from file can't be converted to double
      */
-     private void addDataPoint(ArrayList<Double> dataList, ArrayList<String> elements, int lineNumber) throws IOException {
+     private void addDataPoints(ArrayList<Double> dataList, ArrayList<String> elements, int lineNumber) throws IOException {
 
         int cellNumber = 0;
         try {
@@ -152,7 +152,7 @@ public class StatisticalTable extends Table {
                 if (lineMatcher.matches()) {
 
                     ArrayList<String> elements = this.splitByElement(line);
-                    this.addDataPoint(this.dataPoints, elements, lineCounter); // adds to numerical list for calculations
+                    this.addDataPoints(this.dataPoints, elements, lineCounter); // adds to numerical list for calculations
                     super.add(elements);
                 }
                 else {
@@ -239,7 +239,7 @@ public class StatisticalTable extends Table {
      */
     public void add(ArrayList<String> elements) throws IOException, Exception {
 
-        this.addDataPoint(this.dataPoints, elements);
+        this.addDataPoints(this.dataPoints, elements);
         super.add(elements);
         this.printTable(this.file);
     }
@@ -266,6 +266,7 @@ public class StatisticalTable extends Table {
      */
     public void clear() throws IOException, Exception {
 
+        this.dataPoints.clear();
         super.clear();
         this.printTable(this.file);
     }
@@ -278,5 +279,97 @@ public class StatisticalTable extends Table {
     public String toString() {
 
         return super.getTable();
+    }
+
+    /**
+     * Calculates the mean value of the entire table if table isn't empty
+     *
+     * @return mean value
+     * @throws Exception if user wants mean of empty table
+     */
+    public double getMeanValue() throws Exception {
+
+        if (this.size() == 0) {
+
+            throw new Exception("CANNOT PERFORM OPERATION ON EMPTY SET");
+        }
+
+        double tableMean = 0;
+        double sumOfElements = 0;
+        for (Double value : this.dataPoints) {
+
+            sumOfElements += value.doubleValue();
+        }
+
+        double numberOfElements = this.dataPoints.size();
+        tableMean = sumOfElements / numberOfElements;
+        return tableMean;
+    }
+
+    /**
+     * Calculates the tableMedian value of the entire table if table isn't empty
+     *
+     * @return tableMedian value
+     * @throws Exception if user wants tableMedian of empty table
+     */
+    public double getMedianValue() throws Exception {
+
+        if (this.size() == 0) {
+
+            throw new Exception("CANNOT PERFORM OPERATION ON EMPTY SET");
+        }
+
+        double tableMedian = 0;
+        ArrayList<Double> dataPointsCopy = new ArrayList<Double>(this.dataPoints);
+        Collections.sort(dataPointsCopy);
+        int numberOfElements = dataPointsCopy.size();
+
+        if (numberOfElements % 2 == 0) {
+
+            double SumOfMiddleElements = dataPointsCopy.get(numberOfElements / 2) + dataPointsCopy.get((numberOfElements / 2) - 1);
+            tableMedian = SumOfMiddleElements / 2.0;
+        }
+        else {
+
+            tableMedian = dataPointsCopy.get(numberOfElements / 2);
+        }
+
+        return tableMedian;
+    }
+
+    /**
+     * Calculates the mode of the entire table if it isn't empty
+     *
+     * @return first found mode if it exsists, otherwise the first element
+     * @throws Exception if user wants mode of empty table
+     */
+    public double getModeValue() throws Exception {
+
+        if (super.size() == 0) {
+
+            throw new Exception("CANNOT PERFORM OPERATION ON EMPTY SET");
+        }
+
+        double tableMode = Double.NaN; // for the case where there is no mode value 
+        int maxOccurrence = 0;
+        for (int i = 0; i < this.dataPoints.size(); i++) {
+
+            int count = 0;
+            for (int j = 0; j < this.dataPoints.size(); j++) {
+
+                if (this.dataPoints.get(j) == this.dataPoints.get(i)) {
+
+                    count++;
+                }
+            }
+
+            if (count > maxOccurrence) {
+
+                maxOccurrence = count;
+                tableMode = this.dataPoints.get(i);
+            }
+        }
+
+        return tableMode;
     }
 }
