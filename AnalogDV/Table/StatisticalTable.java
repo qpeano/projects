@@ -282,6 +282,16 @@ public class StatisticalTable extends Table {
     }
 
     /**
+     * Fetches size of the table, i.e number of elements the table contains
+     *
+     * @return number of elements
+     */
+    public int size() {
+
+        return super.size();
+    }
+
+    /**
      * Calculates the mean value of the entire table if table isn't empty
      *
      * @return mean value
@@ -345,12 +355,12 @@ public class StatisticalTable extends Table {
      */
     public double getModeValue() throws Exception {
 
-        if (super.size() == 0) {
+        if (this.size() == 0) {
 
             throw new Exception("CANNOT PERFORM OPERATION ON EMPTY SET");
         }
 
-        double tableMode = Double.NaN; // for the case where there is no mode value 
+        double tableMode = Double.NaN; // for the case where there is no mode value
         int maxOccurrence = 0;
         for (int i = 0; i < this.dataPoints.size(); i++) {
 
@@ -372,4 +382,55 @@ public class StatisticalTable extends Table {
 
         return tableMode;
     }
+
+    /**
+     * Calculates the standard deviation of the entire table, if it isn't empty
+     *
+     * @param setting determines if it is a population or sample data that is being calculated
+     * @return standard deviation of table
+     * @throws Exception if user wants standard deviation of empty table
+     */
+     public double getStandardDeviation(int setting) throws Exception {
+
+        if (this.size() == 0) {
+
+            throw new Exception("CANNOT PERFORM OPERATION ON EMPTY SET");
+        }
+
+        double variance = 0;
+        double meanValue = this.getMeanValue();
+        double numberOfElements = this.dataPoints.size();
+        double standDev = 0;
+
+        for (Double dataPoint : this.dataPoints) {
+
+            double value = dataPoint.doubleValue();
+            variance += Math.pow((value - meanValue), 2);
+        }
+
+        if (setting == 0) {
+
+            standDev = Math.sqrt(variance / (numberOfElements - 1)); // sampe data
+        }
+        else if (setting == 1) {
+
+            standDev = Math.sqrt(variance / numberOfElements); // whole population
+        }
+        else {
+
+            throw new Exception("CHOOSE BETWEEN\n0: SAMPLE SD\n1: POPULATION SD\n NO OTHER VALUE");
+        }
+
+        return standDev;
+     }
+
+     /**
+      * Calculates the best fit line to 2 columns of the table, where one is the independet variable, and the other one the dependent
+      * method uses Linear regression 
+      *
+      * @param xColumn the column of independent values
+      * @param yColumn the column of dependent values
+      * @return a, b to the equation Y = a + b * X
+      * @throws Exception if columns doesn't have same number of values
+      */
 }
