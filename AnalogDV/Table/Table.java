@@ -201,6 +201,16 @@ public abstract class Table {
     }
 
     /**
+     * Lets user see the max number of columns on each row
+     *
+     * @return number of columns on each row
+     */
+    public int setColumns() {
+
+        return this.numberOfColumns;
+    }
+
+    /**
      * Lets user add an element to table
      *
      * @param element new element to be insterted to table
