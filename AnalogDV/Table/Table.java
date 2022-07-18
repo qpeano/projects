@@ -205,7 +205,7 @@ public abstract class Table {
      *
      * @return number of columns on each row
      */
-    public int setColumns() {
+    public int getColumns() {
 
         return this.numberOfColumns;
     }
