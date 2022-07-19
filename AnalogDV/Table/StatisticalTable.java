@@ -14,12 +14,12 @@ public class StatisticalTable extends Table {
 
     /* INNER CLASS */
 
-    private class Point { // represents a point in the cartetsian plane, used for linear regression
+    private class CartesianPoint { // represents a point in the cartesian plane, used for linear regression
 
-        double xValue;
-        double yValue;
+        private double xValue;
+        private double yValue;
 
-        public Point(double x, double y) {
+        public CartesianPoint(double x, double y) {
 
             this.xValue = x;
             this.yValue = y;
@@ -245,11 +245,11 @@ public class StatisticalTable extends Table {
      * @param yColumn the column with dependant values
      * @param xColumn the column with independent values
      * @param columnLimit the max number of columns in a row
-     * @throws IOException if columns does not have same amount of values
+     * @throws IOException if columns does not have same amount of values, or are empty
      * @throws Exception if any column numbers given is greater than the max number of column for a row, or if numbers are negative
      * @return list of points representations of the values
      */
-    private ArrayList<Point> getPoints(ArrayList<Double> dataList, int xColumn, int yColumn, int columnLimit) throws IOException, Exception {
+    private ArrayList<CartesianPoint> getPoints(ArrayList<Double> dataList, int xColumn, int yColumn, int columnLimit) throws IOException, Exception {
 
         if ((yColumn > columnLimit) || (xColumn > columnLimit)) {
 
@@ -260,15 +260,15 @@ public class StatisticalTable extends Table {
             throw new Exception("COLUMN NUMBERS SHOÚLD NOT BE LESS THAN 1");
         }
 
-        ArrayList<Point> points = new ArrayList<>();
+        ArrayList<CartesianPoint> points = new ArrayList<>();
 
         int indexOfX = xColumn - 1;
-        int indexxOfy = yColumn - 1;
+        int indexOfY = yColumn - 1;
         while ((indexOfY < dataList.size()) && (indexOfX < dataList.size())) {
 
             double xValue = dataList.get(indexOfX);
             double yValue = dataList.get(indexOfY);
-            points.add(new Point(xValue, yValue));
+            points.add(new CartesianPoint(xValue, yValue));
             indexOfX += columnLimit;
             indexOfY += columnLimit;
         }
@@ -278,7 +278,7 @@ public class StatisticalTable extends Table {
             throw new IOException("CHECK FILE, COLUMNS MIGHT NOT HAVE EQUAL AMOUNT OF VALUES, OR MIGHT EVEN BE EMPTY");
         }
 
-        return points; 
+        return points;
     }
 
     /* METHODS - interface */
@@ -497,18 +497,18 @@ public class StatisticalTable extends Table {
      * @param xColumn the column of independent values
      * @param yColumn the column of dependent values
      * @return array with 2 elements a, b to the equation Y = a + b * X
-     * @throws IOException if columns doesn't have same number of values
+     * @throws IOException if columns doesn't have same number of values, or are empty
      * @throws Exception if any column numbers given is greater than the max number of column for a row
      */
     public double[] linearRegression(int xColumn, int yColumn) throws IOException, Exception {
 
-        ArrayList<Point> points = this.getPoints(this.dataPoints, xColumn, yColumn, super.getColumns());
+        ArrayList<CartesianPoint> points = this.getPoints(this.dataPoints, xColumn, yColumn, super.getColumns());
         double numberOfElements = points.size();
         double sumOfY = 0;
         double sumOfX = 0;
 
         double[] constants = new double[2];
-        for (Point<Double> p : points) {
+        for (CartesianPoint p : points) {
 
             sumOfX += p.getX();
             sumOfY += p.getY();
@@ -519,7 +519,7 @@ public class StatisticalTable extends Table {
 
         double numerator = 0;
         double denominator = 0;
-        for (Point<Double> p : points) {
+        for (CartesianPoint p : points) {
 
             numerator += (p.getX() - averageOfX) * (p.getY() - averageOfY);
             denominator += Math.pow((p.getX() - averageOfX), 2);
