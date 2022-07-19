@@ -358,6 +358,8 @@ public class StatisticalTable extends Table {
         return super.size();
     }
 
+    /* METHODS - interface - statistical */
+
     /**
      * Calculates the mean value of the entire table if table isn't empty
      *
@@ -485,7 +487,7 @@ public class StatisticalTable extends Table {
         }
         else {
 
-            throw new Exception("CHOOSE BETWEEN\n0: SAMPLE SD\n1: POPULATION SD\n NO OTHER VALUE");
+            throw new Exception("CHOOSE BETWEEN\n0: SAMPLE SD\n1: POPULATION SD\n NO OTHER VALUES ARE ACCEPTED");
         }
 
         return standDev;
@@ -493,6 +495,7 @@ public class StatisticalTable extends Table {
 
     /**
      * Calculates the best fit line to 2 columns of the table, where one is the independet variable, and the other one the dependent
+     * Method uses the simple linear regression formula: https://www.youtube.com/watch?v=3g-e2aiRfbU&t=128s
      *
      * @param xColumn the column of independent values
      * @param yColumn the column of dependent values
@@ -532,4 +535,23 @@ public class StatisticalTable extends Table {
         constants[1] = b;
         return constants;
     }
-}
+
+    /* METHODS - interface - data visualization */
+
+    // method makes bar chart displaying number of values on each column
+    public Chart getBarChart() throws IOException, Exception {}
+
+    // method makes bar chart displaying number of strings that equals to one of the values in the given list
+    public Chart getBarChart(String[] values) throws IOException, Exception {}
+
+    // makes column chart displaying number of values on each column
+    public Chart getColumnChart() throws IOException, Exception {}
+
+    // makes column chart displaying number of strings that equals to one of the values in the given list
+    public Chart getColumnChart(String[] values) throws IOException, Exception {}
+
+    // method makes plot to display values in pairs
+    public Chart getPlot(int xColumn, int yColumn) throws IOException {}
+
+    // metod makes plot to display best fit line
+    public Chart getPlot(double[] constants) throws IOException {}
