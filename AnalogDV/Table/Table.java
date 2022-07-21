@@ -1,3 +1,9 @@
+/* This class is used as the base for classes that need to store values in true table format,
+ * which isn't the same format as the data structure with the same name.
+ *
+ * Author @qpeano [created: 2022-06-18 | last updated: 2022-07-18]
+ */
+
 package analogdv;
 import java.util.ArrayList;
 
