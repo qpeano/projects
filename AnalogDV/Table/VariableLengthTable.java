@@ -1,3 +1,10 @@
+/* This is a proof of concept for classes that inherit from the analogdv.Table class.
+ * This class can be used to store data inbetween runs of a program in table format. A flaw about the storing
+ * mechanism is that manually added whitespace is removed no matter what.
+ *
+ * Author @qpeano [created: 2022-07-09 | last updated: 2022-07-10]
+ */
+
 package analogdv;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
@@ -21,7 +28,7 @@ public class VariableLengthTable extends Table {
      * @throws IOException if something happens while reading from file or if file is not formatted properly
      * @throws Exception if columns < 1
      */
-    public VariableLengthTable(String path, ArrayList<String> elements, int columns) throws Exception, Exception {
+    public VariableLengthTable(String path, ArrayList<String> elements, int columns) throws IOException, Exception {
 
         super(elements, columns);
         this.file = new File(path);
@@ -38,7 +45,7 @@ public class VariableLengthTable extends Table {
      * @throws IOException if something happens while reading from file or if file is not formatted properly
      * @throws Exception if something happens while formatting table
      */
-    public VariableLengthTable(String path, int columns) throws Exception, Exception {
+    public VariableLengthTable(String path, int columns) throws IOException, Exception {
 
         super(columns);
         this.file = new File(path);
